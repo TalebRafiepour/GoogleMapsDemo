@@ -12,10 +12,18 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.places.AutocompleteFilter
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.PlaceFilter
+import com.google.android.gms.location.places.Places
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import kotlinx.android.synthetic.main.activity_map.*
@@ -23,10 +31,19 @@ import java.io.IOException
 import java.lang.Exception
 import java.util.*
 
-class MapActivity : AppCompatActivity() {
+class MapActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
+
+
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        Log.e("","onConnectionFailed")
+    }
 
     private var googleMap: GoogleMap? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
+    /*private var placeAutocompleteAdapter:PlaceAutocompleteAdapter? = null
+    private var googleApiClient:GoogleApiClient? = null
+    private var mGeoDataClient:GeoDataClient? = null*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +67,19 @@ class MapActivity : AppCompatActivity() {
 
     private fun initSearchEditText() {
         if (getMapLocationPermissions()) {
+
+            /*googleApiClient = GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this,this)
+                .build()
+            // Construct a GeoDataClient for the Google Places API for Android.
+            mGeoDataClient = Places.getGeoDataClient(this, null)
+            placeAutocompleteAdapter = PlaceAutocompleteAdapter(this,mGeoDataClient!!, LAT_LANG_BOUNDS,)
+
+            searchOnMapEditText.setAdapter(placeAutocompleteAdapter)*/
+
             searchOnMapEditText.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH
                     || actionId == EditorInfo.IME_ACTION_DONE
@@ -147,6 +177,9 @@ class MapActivity : AppCompatActivity() {
             val markerOptions = MarkerOptions()
                 .position(latLng)
                 .title(title)
+            //todo you can also put snippet to the marker and set on click listener to that
+            //todo you can also set custom info window for the marker
+            //todo add place picker
             googleMap?.addMarker(markerOptions)
         }
     }
@@ -174,5 +207,6 @@ class MapActivity : AppCompatActivity() {
     companion object {
         private const val MAP_PERMISSIONS_REQUEST = 23
         private const val DEFAULT_MAP_ZOOM = 15f
+        private val LAT_LANG_BOUNDS:LatLngBounds = LatLngBounds(LatLng(-40.0,-160.0), LatLng(71.0,136.0))
     }
 }

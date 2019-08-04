@@ -29,7 +29,7 @@
             android:elevation="10dp">
         <ImageView android:layout_width="28dp" android:layout_height="28dp"
                    android:src="@drawable/ic_magnify"/>
-        <EditText android:layout_width="0dp" android:layout_height="match_parent"
+        <AutoCompleteTextView android:layout_width="0dp" android:layout_height="match_parent"
                   android:layout_weight="1"
                   android:id="@+id/searchOnMapEditText"
                   android:imeOptions="actionSearch"
